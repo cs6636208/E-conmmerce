@@ -1,7 +1,29 @@
+const prisma = require("../config/prisma");
+
 exports.create = async (req, res) => {
   try {
     // code
-    res.send("Hello Create Product");
+    const { title, description, price, quantity, categoryId, images } =
+      req.body;
+    // console.log(title, description, price, quantity, images);
+    const product = await prisma.product.create({
+      data: {
+        title: title,
+        description: description,
+        price: parseFloat(price),
+        quantity: parseInt(quantity),
+        categoryId: parseInt(categoryId),
+        images: {
+          create: images.map((item) => ({
+            asset_id: item.asset_id,
+            public_id: item.public_id,
+            url: item.url,
+            secure_url: item.secure_url,
+          })),
+        },
+      },
+    });
+    res.send(product);
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -13,7 +35,40 @@ exports.create = async (req, res) => {
 exports.list = async (req, res) => {
   try {
     // code
-    res.send("Hello List Product");
+    const { count } = req.params;
+    const products = await prisma.product.findMany({
+      take: parseInt(count),
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        category: true,
+        images: true,
+      },
+    });
+    res.send(products);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+
+exports.read = async (req, res) => {
+  try {
+    // code
+    const { id } = req.params;
+    const products = await prisma.product.findFirst({
+      where: {
+        id: Number(id),
+      },
+      include: {
+        category: true,
+        images: true,
+      },
+    });
+    res.send(products);
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -25,7 +80,38 @@ exports.list = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     // code
-    res.send("Hello Update Product");
+    const { title, description, price, quantity, categoryId, images } =
+      req.body;
+    // console.log(title, description, price, quantity, images);
+
+    // clear
+    await prisma.image.deleteMany({
+      where: {
+        productId: Number(req.params.id),
+      },
+    });
+
+    const product = await prisma.product.update({
+      where: {
+        id: Number(req.params.id),
+      },
+      data: {
+        title: title,
+        description: description,
+        price: parseFloat(price),
+        quantity: parseInt(quantity),
+        categoryId: parseInt(categoryId),
+        images: {
+          create: images.map((item) => ({
+            asset_id: item.asset_id,
+            public_id: item.public_id,
+            url: item.url,
+            secure_url: item.secure_url,
+          })),
+        },
+      },
+    });
+    res.send(product);
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -37,7 +123,13 @@ exports.update = async (req, res) => {
 exports.remove = async (req, res) => {
   try {
     // code
-    res.send("Hello Remove Product");
+    const { id } = req.params;
+    await prisma.product.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+    res.send("Deleted Successfully");
   } catch (err) {
     console.log(err);
     res.status(500).json({
