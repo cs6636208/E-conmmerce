@@ -115,7 +115,7 @@ exports.login = async (req, res) => {
 
 exports.currentUser = async (req, res) => {
   try {
-    res.send("Hello Current User");
+    res.send("Hello current user");
   } catch (err) {
     console.log(err);
     res.status(500).json({

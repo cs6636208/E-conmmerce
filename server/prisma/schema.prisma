@@ -16,7 +16,7 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
-  password  String? // ? password เป็นค่าว่างได้
+  password  String?
   name      String?
   picture   String?
   role      String   @default("user")
