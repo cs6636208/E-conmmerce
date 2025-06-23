@@ -141,7 +141,59 @@ exports.remove = async (req, res) => {
 exports.listby = async (req, res) => {
   try {
     // code
-    res.send("Hello Listby Product");
+    const { sort, order, limit } = req.body;
+    console.log(sort, order, limit);
+    const products = await prisma.product.findMany({
+      take: limit,
+      orderBy: {
+        [sort]: order,
+      },
+      include: {
+        category: true,
+      },
+    });
+    res.send(products);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+
+const handleQuery = async (req, res, query) => {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        title: {
+          contains: query,
+        },
+      },
+      include: {
+        category: true,
+        images: true,
+      },
+    });
+    res.send(products);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Search Error",
+    });
+  }
+};
+
+const handlePrice = async (req, res, priceRange) => {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        price: {
+          gte: priceRange[0],
+          lte: priceRange[1],
+        },
+      },
+    });
+    res.send(products);
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -153,7 +205,20 @@ exports.listby = async (req, res) => {
 exports.searchFilters = async (req, res) => {
   try {
     // code
-    res.send("Hello searchFilters Product");
+    const { query, category, price } = req.body;
+
+    if (query) {
+      console.log("query-->", query);
+      await handleQuery(req, res, query);
+    }
+    if (category) {
+      console.log("category-->", category);
+    }
+    if (price) {
+      console.log("price-->", price);
+    }
+
+    // res.send("Hello searchFilters Product");
   } catch (err) {
     console.log(err);
     res.status(500).json({
