@@ -192,6 +192,32 @@ const handlePrice = async (req, res, priceRange) => {
           lte: priceRange[1],
         },
       },
+      include: {
+        category: true,
+        images: true,
+      },
+    });
+    res.send(products);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+
+const handleCategory = async (req, res, categoryId) => {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        categoryId: {
+          in: categoryId.map((id) => Number(id)),
+        },
+      },
+      include: {
+        category: true,
+        images: true,
+      },
     });
     res.send(products);
   } catch (err) {
@@ -213,9 +239,11 @@ exports.searchFilters = async (req, res) => {
     }
     if (category) {
       console.log("category-->", category);
+      await handleCategory(req, res, category);
     }
     if (price) {
       console.log("price-->", price);
+      await handlePrice(req, res, price);
     }
 
     // res.send("Hello searchFilters Product");
