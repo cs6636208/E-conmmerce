@@ -90,7 +90,7 @@ exports.login = async (req, res) => {
       payload,
       process.env.SECRET,
       {
-        expiresIn: "1d",
+        expiresIn: "7d",
       },
       (err, token) => {
         if (err) {
