@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const prisma = require("../config/prisma");
 
 exports.authCheck = async (req, res, next) => {
   try {
@@ -10,16 +11,46 @@ exports.authCheck = async (req, res, next) => {
       });
     }
     const token = headerToken.split(" ")[1];
-
     const decoded = jwt.verify(token, process.env.SECRET);
-
-    console.log(decoded);
-    console.log("Hello Midldleware");
+    req.user = decoded;
+    const user = await prisma.user.findFirst({
+      where: {
+        email: req.user.email,
+      },
+    });
+    if (!user.enabled) {
+      return res.status(400).json({
+        message: "This account cannot access.",
+      });
+    }
     next();
   } catch (err) {
     console.log(err);
     res.status(500).json({
       message: "Token Invalid",
+    });
+  }
+};
+
+exports.adminCheck = async (req, res, next) => {
+  try {
+    const { email } = req.user;
+    const adminUser = await prisma.user.findFirst({
+      where: {
+        email: email,
+      },
+    });
+    if (!adminUser || adminUser.role !== "admin") {
+      return res.status(403).json({
+        message: "Access Denied, Admins Only",
+      });
+    }
+    // console.log("admin check", adminUser);
+    next();
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Error Admin access denied",
     });
   }
 };
