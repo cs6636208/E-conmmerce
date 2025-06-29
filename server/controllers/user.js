@@ -326,7 +326,7 @@ exports.getOrder = async (req, res) => {
         },
       },
     });
-    if (!orders.length === 0) {
+    if (orders.length === 0) {
       return res.status(400).json({
         ok: false,
         message: "No orders",
