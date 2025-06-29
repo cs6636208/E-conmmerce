@@ -124,6 +124,9 @@ exports.remove = async (req, res) => {
   try {
     // code
     const { id } = req.params;
+
+    // หนังชีวิต
+
     await prisma.product.delete({
       where: {
         id: Number(id),
