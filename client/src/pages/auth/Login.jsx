@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-// import axios from "axios";
-// import { toast } from "react-toastify";
+import axios from "axios";
+import { toast } from "react-toastify";
 import useEcomStore from "../../store/ecom-store";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   // javascript
+  const navigate = useNavigate();
   const actionLogin = useEcomStore((state) => state.actionLogin);
+  const user = useEcomStore((state) => state.user);
+  console.log("user from zustand", user);
 
   const [form, setForm] = useState({
     email: "",
@@ -25,9 +29,21 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await actionLogin(form);
-      console.log(res);
+      const role = res.data.payload.role;
+      roleRedirect(role);
+      toast.success("Welcome Back");
     } catch (err) {
       console.log(err);
+      const errMsg = err.response?.data?.message;
+      toast.error(errMsg);
+    }
+  };
+
+  const roleRedirect = (role) => {
+    if (role == "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/user");
     }
   };
 
