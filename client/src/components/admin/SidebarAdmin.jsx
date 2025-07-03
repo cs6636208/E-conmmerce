@@ -5,6 +5,7 @@ import {
   SquareChartGantt,
   ChartBarStacked,
   PackageSearch,
+  LogOut,
 } from "lucide-react";
 
 const SidebarAdmin = () => {
@@ -68,7 +69,7 @@ const SidebarAdmin = () => {
               : "text-gray-300 px-4 py-2 hover:bg-gray-700 hover:text-white rounded flex items-center"
           }
         >
-          <PackageSearch className="mr-2" />
+          <LogOut className="mr-2" />
           Logout
         </NavLink>
       </div>
