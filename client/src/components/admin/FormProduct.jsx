@@ -18,14 +18,15 @@ const FormProduct = () => {
   const categories = useEcomStore((state) => state.categories);
   const getProduct = useEcomStore((state) => state.getProduct);
   const products = useEcomStore((state) => state.products);
+  console.log(products);
+
   const [form, setForm] = useState(initialState);
 
   useEffect(() => {
     // code
     getCategory(token);
-    getProduct(token, 2);
+    getProduct(token, 20);
   }, []);
-  console.log(categories);
 
   const handleOnChange = (e) => {
     console.log(e.target.name, e.target.value);
@@ -98,6 +99,42 @@ const FormProduct = () => {
         </select>
         <hr />
         <button className="bg-blue-500">เพิ่มสินค้า</button>
+        <hr />
+        <br />
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">No.</th>
+              <th scope="col">ชื่อสินค้า</th>
+              <th scope="col">รายละเอียด</th>
+              <th scope="col">ราคา</th>
+              <th scope="col">จำนวน</th>
+              <th scope="col">จำนวนที่ขายได้</th>
+              <th scope="col">วันที่อัปเดต</th>
+              <th scope="col">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((item, index) => {
+              console.log(item);
+              return (
+                <tr>
+                  <th scope="row">{index + 1}</th>
+                  <td>{item.title}</td>
+                  <td>{item.description}</td>
+                  <td>{item.price}</td>
+                  <td>{item.quantity}</td>
+                  <td>{item.sold}</td>
+                  <td>{item.updatedAt}</td>
+                  <td>
+                    <p>แก้ไข</p>
+                    <p>ลบ</p>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </form>
     </div>
   );
