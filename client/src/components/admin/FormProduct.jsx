@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useEcomStore from "../../store/ecom-store";
 import { createProduct } from "../../api/product";
 import { toast } from "react-toastify";
+import Uploadfile from "./Uploadfile";
 
 const initialState = {
   title: "Core i7",
@@ -18,7 +19,7 @@ const FormProduct = () => {
   const categories = useEcomStore((state) => state.categories);
   const getProduct = useEcomStore((state) => state.getProduct);
   const products = useEcomStore((state) => state.products);
-  console.log(products);
+  // console.log(products);
 
   const [form, setForm] = useState(initialState);
 
@@ -98,6 +99,9 @@ const FormProduct = () => {
           ))}
         </select>
         <hr />
+        {/* Upload file */}
+        <Uploadfile form={form} setForm={setForm} />
+
         <button className="bg-blue-500">เพิ่มสินค้า</button>
         <hr />
         <br />
@@ -116,9 +120,9 @@ const FormProduct = () => {
           </thead>
           <tbody>
             {products.map((item, index) => {
-              console.log(item);
+              // console.log(item);
               return (
-                <tr>
+                <tr key={index}>
                   <th scope="row">{index + 1}</th>
                   <td>{item.title}</td>
                   <td>{item.description}</td>
