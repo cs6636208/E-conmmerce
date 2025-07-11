@@ -19,12 +19,28 @@ export const listProduct = async (token, count = 20) => {
 };
 
 export const uploadFiles = async (token, form) => {
-  // code body
+  // code
   // console.log("form api frontend", form);
   return axios.post(
     "http://localhost:5000/api/images",
     {
       image: form,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+
+export const removeFiles = async (token, public_id) => {
+  // code
+  // console.log("form api frontend", form);
+  return axios.post(
+    "http://localhost:5000/api/removeimages",
+    {
+      public_id,
     },
     {
       headers: {
