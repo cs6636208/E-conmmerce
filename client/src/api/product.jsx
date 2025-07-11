@@ -18,6 +18,24 @@ export const listProduct = async (token, count = 20) => {
   });
 };
 
+export const readProduct = async (token, id) => {
+  // code body
+  return axios.get("http://localhost:5000/api/product/" + id, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const updateProduct = async (token, id, form) => {
+  // code body
+  return axios.put("http://localhost:5000/api/product/" + id, form, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export const uploadFiles = async (token, form) => {
   // code
   // console.log("form api frontend", form);
