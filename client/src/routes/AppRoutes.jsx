@@ -17,6 +17,7 @@ import LayoutUser from "../layouts/LayoutUser";
 import HomeUser from "../pages/user/HomeUser";
 import ProtectRouteUser from "./ProtectRouteUser";
 import ProtectRouteAdmin from "./ProtectRouteAdmin";
+import EditProduct from "../pages/admin/EditProduct";
 
 // path หน้าที่ไม่ต้อง Login
 const router = createBrowserRouter([
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       { path: "category", element: <Category /> },
       { path: "product", element: <Product /> },
+      { path: "product/:id", element: <EditProduct /> },
       { path: "manage", element: <Manage /> },
     ],
   },
