@@ -4,6 +4,7 @@ import { createProduct, deleteProduct } from "../../api/product";
 import { toast } from "react-toastify";
 import Uploadfile from "./Uploadfile";
 import { Link } from "react-router-dom";
+import { Pencil, Trash } from "lucide-react";
 
 const initialState = {
   title: "",
@@ -22,7 +23,14 @@ const FormProduct = () => {
   const products = useEcomStore((state) => state.products);
   // console.log(products);
 
-  const [form, setForm] = useState(initialState);
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    price: 0,
+    quantity: 0,
+    categoryId: "",
+    images: [],
+  });
 
   useEffect(() => {
     // code
@@ -119,66 +127,99 @@ const FormProduct = () => {
         {/* Upload file */}
         <Uploadfile form={form} setForm={setForm} />
 
-        <button className="bg-blue-500">เพิ่มสินค้า</button>
+        <button className="bg-blue-500 p-2 rounded-md shadow-md hover:scale-105 hover:-translate-y-1 hover:duration-200">
+          เพิ่มสินค้า
+        </button>
         <hr />
         <br />
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">No.</th>
-              <th scope="col">รูปภาพ</th>
-              <th scope="col">ชื่อสินค้า</th>
-              <th scope="col">รายละเอียด</th>
-              <th scope="col">ราคา</th>
-              <th scope="col">จำนวน</th>
-              <th scope="col">จำนวนที่ขายได้</th>
-              <th scope="col">วันที่อัปเดต</th>
-              <th scope="col">จัดการ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((item, index) => {
-              // console.log(item);
-              return (
-                <tr key={index}>
-                  <th scope="row">{index + 1}</th>
-                  <td>
-                    {item.images.length > 0 ? (
-                      <img
-                        className="w-24 h-24 rounded-lg shadow-md"
-                        src={item.images[0].url}
-                      />
-                    ) : (
-                      <div
-                        className="w-24 h-24 bg-slate-200 rounded-md 
-                      flex items-center justify-center shadow-sm"
-                      >
-                        No Image
-                      </div>
-                    )}
-                  </td>
-                  <td>{item.title}</td>
-                  <td>{item.description}</td>
-                  <td>{item.price}</td>
-                  <td>{item.quantity}</td>
-                  <td>{item.sold}</td>
-                  <td>{item.updatedAt}</td>
-                  <td className="flex gap-2">
-                    <p className="bg-yellow-500 rounded-md p-1 shadow-md">
-                      <Link to={"/admin/product/" + item.id}> แก้ไข </Link>
-                    </p>
-                    <p
-                      className="bg-red-500 rounded-md p-1 shadow-md"
-                      onClick={() => handleDelete(item.id)}
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table className="text-gray-900 dark:text-slate-950">
+            <thead>
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  No.
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  รูปภาพ
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  ชื่อสินค้า
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  รายละเอียด
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  ราคา
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  จำนวน
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  จำนวนที่ขายได้
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  วันที่อัปเดต
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  จัดการ
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((item, index) => {
+                // console.log(item);
+                return (
+                  <tr
+                    key={index}
+                    className="border-b dark:border-gray-700 border-gray-200"
+                  >
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-slate-950"
                     >
-                      ลบ
-                    </p>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                      {index + 1}
+                    </th>
+                    <td className="px-6 py-4">
+                      {item.images.length > 0 ? (
+                        <img
+                          className="w-24 h-24 rounded-lg shadow-md"
+                          src={item.images[0].url}
+                        />
+                      ) : (
+                        <div
+                          className="w-24 h-24 bg-slate-200 rounded-md 
+                      flex items-center justify-center shadow-sm"
+                        >
+                          No Image
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">{item.title}</td>
+                    <td className="px-6 py-4">{item.description}</td>
+                    <td className="px-6 py-4">{item.price}</td>
+                    <td className="px-6 py-4">{item.quantity}</td>
+                    <td className="px-6 py-4">{item.sold}</td>
+                    <td className="px-6 py-4">{item.updatedAt}</td>
+                    <td className="flex gap-4 mt-10 gap-x-5 gap-y-5">
+                      <p className="font-medium text-blue-600 rounded-md p-2 dark:text-blue-500 hover:underline hover:scale-105 hover:-translate-y-1 hover:duration-200 shadow-md">
+                        <Link to={"/admin/product/" + item.id}>
+                          {" "}
+                          <Pencil />{" "}
+                        </Link>
+                      </p>
+                      <p
+                        className="font-medium text-blue-600 rounded-md p-2 dark:text-blue-500 hover:underline hover:scale-105 hover:-translate-y-1 hover:duration-200 shadow-md"
+                        onClick={() => handleDelete(item.id)}
+                      >
+                        <Trash />
+                      </p>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </form>
     </div>
   );
